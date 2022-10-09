@@ -32,3 +32,17 @@ export type iochild = {
   name: string;
   type: string;
 };
+
+export type functionLiteral = {
+  name: string;
+  attributes: {
+    inputs: {
+      obj: iochild[];
+      literals?: string;
+    };
+    outputs: {
+      obj: iochild[];
+      literals?: string;
+    };
+  };
+};

@@ -1,27 +1,20 @@
 import {
-  ABI,
+  iochild,
+  int,
+  uint,
+  intMapping,
   address,
   addressMapping,
+  string,
+  stringMapping,
   bool,
   boolMapping,
   fallbackMapping,
-  int,
-  intMapping,
-  iochild,
-  string,
-  stringMapping,
-  uint,
-} from "../type-mapping";
-import * as fs from "fs-extra";
-import * as path from "path";
-import AbiReader from "../reader";
+  ABI,
+} from "./type-mapping";
 import { COLON, SPACE, OPEN_PAR, COMMA, CLOSE_PAR } from "./token";
 
-export default class Writer {
-  public write(abi: ABI) {
-    console.log(this.writeInputParam(abi[1].inputs));
-  }
-
+export default abstract class IoParser {
   private buildInputLiteral(input: iochild): string {
     const inputType = this.determineType(input.type);
     const inputName = input.name;
@@ -45,6 +38,11 @@ export default class Writer {
   private getStartingParam() {
     return SPACE.concat(OPEN_PAR, SPACE);
   }
+
+  protected parseInputs(abi: ABI) {}
+
+  private extractIoChild(abi: ABI) {}
+
   private writeInputParam(value: iochild[]) {
     const lastIndex = value.length - 1;
     let params = this.getStartingParam();
