@@ -11,8 +11,18 @@ import {
   boolMapping,
   fallbackMapping,
   ABI,
+  functionLiteral,
+  _function,
 } from "./type-mapping";
-import { COLON, SPACE, OPEN_PAR, COMMA, CLOSE_PAR } from "./token";
+import {
+  COLON,
+  SPACE,
+  OPEN_PAR,
+  COMMA,
+  CLOSE_PAR,
+  OPEN_BRACE,
+  CLOSE_BRACE,
+} from "./token";
 import AbiGrouper from "./grouper";
 
 export default class IoParser extends AbiGrouper {
@@ -49,6 +59,7 @@ export default class IoParser extends AbiGrouper {
   }
 
   private writeIo(value: iochild[]) {
+    if (value.length === 0) return "";
     const lastIndex = value.length - 1;
     let params = this.getStartingParam();
     let literal = this.parseInput(value);
@@ -61,6 +72,24 @@ export default class IoParser extends AbiGrouper {
     }
 
     return params.concat(CLOSE_PAR, SPACE);
+  }
+
+  private parseFnSignature(fnObj: functionLiteral) {
+    const signature = _function.concat(
+      SPACE,
+      fnObj.name,
+      SPACE,
+      fnObj.attributes.inputs.literals as any,
+      SPACE,
+      // TODO : populate function body with ethers js
+      // just put open and close brace for now
+      OPEN_BRACE,
+      // this space will become function implementation later
+      SPACE,
+      CLOSE_BRACE
+    );
+
+    return signature;
   }
 
   private determineType(value: string): string {

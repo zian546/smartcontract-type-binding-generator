@@ -33,8 +33,11 @@ export type iochild = {
   type: string;
 };
 
+// TODO : make body using ethers js
 export type functionLiteral = {
   name: string;
+  signatureLiteral?: string;
+  body?: any;
   attributes: {
     inputs: {
       obj: iochild[];
