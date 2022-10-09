@@ -51,8 +51,12 @@ export default class IoParser extends AbiGrouper {
     const fnGroup = this.group(abi);
 
     for (const fn of fnGroup) {
+      // it is IMPORTANT that we parse signature literal AFTER parsing input and output literals.
+      // because we need input and output literals to complete function signature literals.
+
       fn.attributes.inputs.literals = this.writeIo(fn.attributes.inputs.obj);
       fn.attributes.outputs.literals = this.writeIo(fn.attributes.outputs.obj);
+      fn.signatureLiteral = this.parseFnSignature(fn);
     }
 
     return fnGroup;
@@ -80,6 +84,7 @@ export default class IoParser extends AbiGrouper {
       fnObj.name,
       SPACE,
       fnObj.attributes.inputs.literals as any,
+      this.determineOutput(fnObj),
       SPACE,
       // TODO : populate function body with ethers js
       // just put open and close brace for now
@@ -90,6 +95,11 @@ export default class IoParser extends AbiGrouper {
     );
 
     return signature;
+  }
+
+  private determineOutput(fnObj: functionLiteral) {
+    if (fnObj.attributes.outputs.obj.length === 0) return "";
+    else return COLON.concat(SPACE, fnObj.attributes.outputs.literals as any);
   }
 
   private determineType(value: string): string {
