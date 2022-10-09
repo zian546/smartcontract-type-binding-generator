@@ -1,12 +1,13 @@
 import { ABI, abiChild, functionLiteral } from "./type-mapping";
 
-export default abstract class AbiGrouper {
+export default class AbiGrouper {
   protected group(abi: ABI) {
     let fnLiteral: functionLiteral[] = [];
     for (const node of abi) {
       const parsedChild: functionLiteral = this.groupAttributes(node);
       fnLiteral.push(parsedChild);
     }
+    return fnLiteral;
   }
   private groupAttributes(node: abiChild): functionLiteral {
     return {
