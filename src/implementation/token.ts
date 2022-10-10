@@ -6,3 +6,7 @@ export const CLOSE_PAR = ")";
 export const SPACE = " ";
 export const COLON = ":";
 export const COMMA = ",";
+export const ASYNC = "async";
+export const EXPORT = "export";
+export const NEWLINE = "\n";
+export const FAT_ARROW = "=>";

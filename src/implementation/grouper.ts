@@ -17,7 +17,7 @@ export default class AbiGrouper {
           obj: node.inputs,
         },
         outputs: {
-          obj: node.output,
+          obj: node.outputs,
         },
       },
     };

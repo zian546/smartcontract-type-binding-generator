@@ -33,7 +33,7 @@ export default class AbiReader {
       constant: child.constant,
       inputs: this.parseIo(child.inputs),
       name: child.name,
-      output: this.parseIo(child.output),
+      outputs: this.parseIo(child.outputs),
       payable: child.payable,
       stateMutability: child.stateMutability,
       type: child.type,
