@@ -1,4 +1,5 @@
 export const DEFAULT_SPACE_FORMAT = 4;
+export const EMPTY_STRING = "";
 export const OPEN_BRACE = "{";
 export const CLOSE_BRACE = "}";
 export const OPEN_PAR = "(";
@@ -10,3 +11,8 @@ export const ASYNC = "async";
 export const EXPORT = "export";
 export const NEWLINE = "\n";
 export const FAT_ARROW = "=>";
+export const PROMISE = "Promise";
+export const OPEN_ANGLE_BRACKET = "<";
+export const CLOSE_ANGLE_BRACKET = ">";
+export const OPEN_BRACKET = "[";
+export const CLOSE_BRACKET = "]";

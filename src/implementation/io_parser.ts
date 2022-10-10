@@ -26,6 +26,12 @@ import {
   ASYNC,
   NEWLINE,
   FAT_ARROW,
+  EMPTY_STRING,
+  PROMISE,
+  OPEN_ANGLE_BRACKET,
+  CLOSE_ANGLE_BRACKET,
+  OPEN_BRACKET,
+  CLOSE_BRACKET,
 } from "./token";
 import AbiGrouper from "./grouper";
 
@@ -44,7 +50,9 @@ export default class IoParser extends AbiGrouper {
   }
   private buildInputLiteral(input: iochild): string {
     const inputType = this.determineType(input.type);
-    const inputName = input.name;
+    const inputName =
+      input.name.length === 0 ? this.getVarCounter() : input.name;
+    this.incrementCounter();
     const inputLiteral = inputName.concat(COLON, SPACE, inputType);
 
     return inputLiteral;
@@ -56,18 +64,16 @@ export default class IoParser extends AbiGrouper {
       const inputLiteral = this.buildInputLiteral(input);
       literal.push(inputLiteral);
     }
+    this.resetCounter();
+
     return literal;
   }
 
   // TODO : make return type in Promise<T>
   private buildOutputLiteral(input: iochild) {
     const outputType = this.determineType(input.type);
-    const outputName =
-      input.name.length === 0 ? this.getVarCounter() : input.name;
-    this.incrementCounter();
-    const outputLiteral = outputName.concat(COLON, SPACE, outputType);
 
-    return outputLiteral;
+    return outputType;
   }
   private parseOutput(value: iochild[]) {
     let literal: string[] = [];
@@ -76,7 +82,6 @@ export default class IoParser extends AbiGrouper {
       literal.push(outputLiteral);
     }
 
-    this.resetCounter();
     return literal;
   }
   private getStartingParam() {
@@ -90,13 +95,9 @@ export default class IoParser extends AbiGrouper {
       // it is IMPORTANT that we parse signature literal AFTER parsing input and output literals.
       // because we need input and output literals to complete function signature literals.
 
-      fn.attributes.inputs.literals = this.writeIo(
-        fn.attributes.inputs.obj,
-        true
-      );
-      fn.attributes.outputs.literals = this.writeIo(
-        fn.attributes.outputs.obj,
-        false
+      fn.attributes.inputs.literals = this.writeInput(fn.attributes.inputs.obj);
+      fn.attributes.outputs.literals = this.writeOutput(
+        fn.attributes.outputs.obj
       );
       fn.signatureLiteral = this.parseFnSignature(fn);
     }
@@ -104,11 +105,11 @@ export default class IoParser extends AbiGrouper {
     return fnGroup;
   }
 
-  private writeIo(value: iochild[], writeInput: boolean) {
+  private writeInput(value: iochild[]) {
     if (value.length === 0) return OPEN_PAR.concat(CLOSE_PAR);
     const lastIndex = value.length - 1;
     let params = this.getStartingParam();
-    let literal = writeInput ? this.parseInput(value) : this.parseOutput(value);
+    let literal = this.parseInput(value);
     for (const i in value) {
       if (i == lastIndex.toString()) {
         params = params.concat(literal[i]);
@@ -118,6 +119,26 @@ export default class IoParser extends AbiGrouper {
     }
 
     return params.concat(CLOSE_PAR, SPACE);
+  }
+
+  private writeOutput(value: iochild[]) {
+    if (value.length === 0) return EMPTY_STRING;
+    const lastIndex = value.length - 1;
+    let params = this.getAsyncOutput();
+    let literal = this.parseOutput(value);
+    for (const i in value) {
+      if (i == lastIndex.toString()) {
+        params = params.concat(literal[i]);
+        break;
+      }
+      params = params.concat(literal[i].concat(COMMA, SPACE));
+    }
+
+    return params.concat(CLOSE_BRACKET, CLOSE_ANGLE_BRACKET, SPACE);
+  }
+
+  private getAsyncOutput() {
+    return PROMISE.concat(OPEN_ANGLE_BRACKET, OPEN_BRACKET);
   }
 
   private parseFnSignature(fnObj: functionLiteral) {
@@ -149,12 +170,7 @@ export default class IoParser extends AbiGrouper {
     if (_eval === 0 || _eval === undefined || _eval === null)
       // make this Promise<T>
       return COLON.concat(SPACE, fallbackMapping);
-    else
-      return COLON.concat(
-        SPACE,
-        fnObj.attributes.outputs.literals as any,
-        FAT_ARROW
-      );
+    else return COLON.concat(SPACE, fnObj.attributes.outputs.literals as any);
   }
 
   private determineType(value: string): string {
