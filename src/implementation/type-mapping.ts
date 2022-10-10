@@ -15,6 +15,13 @@ export const boolMapping = "boolean";
 
 export const fallbackMapping = "any";
 
+export const nonpayable = "nonpayable";
+export const nonpayableMapping = false;
+
+export const payable = "payable";
+export const payableMapping = false;
+
+export const fallbackMutabilityMapping = true;
 export type ABI = abiChild[];
 
 export type abiChild = {
@@ -35,6 +42,7 @@ export type iochild = {
 // TODO : make body using ethers js
 export type functionLiteral = {
   name: string;
+  constant: boolean;
   signatureLiteral?: string;
   body?: any;
   attributes: {
