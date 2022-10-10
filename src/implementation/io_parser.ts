@@ -25,7 +25,6 @@ import {
   EXPORT,
   ASYNC,
   NEWLINE,
-  FAT_ARROW,
   EMPTY_STRING,
   PROMISE,
   OPEN_ANGLE_BRACKET,
@@ -36,6 +35,7 @@ import {
 import AbiGrouper from "./grouper";
 
 const UNNAMED_VAR = "argv";
+const SINGLE_ELEMENT = 1;
 export default class IoParser extends AbiGrouper {
   private unnamedCounter: number = 0;
 
@@ -124,7 +124,7 @@ export default class IoParser extends AbiGrouper {
   private writeOutput(value: iochild[]) {
     if (value.length === 0) return EMPTY_STRING;
     const lastIndex = value.length - 1;
-    let params = this.getAsyncOutput();
+    let params = this.getAsyncOutput(value.length);
     let literal = this.parseOutput(value);
     for (const i in value) {
       if (i == lastIndex.toString()) {
@@ -134,11 +134,16 @@ export default class IoParser extends AbiGrouper {
       params = params.concat(literal[i].concat(COMMA, SPACE));
     }
 
-    return params.concat(CLOSE_BRACKET, CLOSE_ANGLE_BRACKET, SPACE);
+    if (value.length === SINGLE_ELEMENT) {
+      return params.concat(CLOSE_ANGLE_BRACKET, SPACE);
+    } else {
+      return params.concat(CLOSE_BRACKET, CLOSE_ANGLE_BRACKET, SPACE);
+    }
   }
 
-  private getAsyncOutput() {
-    return PROMISE.concat(OPEN_ANGLE_BRACKET, OPEN_BRACKET);
+  private getAsyncOutput(length: number) {
+    if (length === SINGLE_ELEMENT) return PROMISE.concat(OPEN_ANGLE_BRACKET);
+    else return PROMISE.concat(OPEN_ANGLE_BRACKET, OPEN_BRACKET);
   }
 
   private parseFnSignature(fnObj: functionLiteral) {
@@ -166,10 +171,16 @@ export default class IoParser extends AbiGrouper {
 
   private determineOutput(fnObj: functionLiteral) {
     const _eval = fnObj.attributes.outputs.obj.length;
+    const constant = fnObj.constant;
 
-    if (_eval === 0 || _eval === undefined || _eval === null)
-      // make this Promise<T>
-      return COLON.concat(SPACE, fallbackMapping);
+    if (_eval === 0 || _eval === undefined || _eval === null || !constant)
+      return COLON.concat(
+        SPACE,
+        PROMISE,
+        OPEN_ANGLE_BRACKET,
+        fallbackMapping,
+        CLOSE_ANGLE_BRACKET
+      );
     else return COLON.concat(SPACE, fnObj.attributes.outputs.literals as any);
   }
 
