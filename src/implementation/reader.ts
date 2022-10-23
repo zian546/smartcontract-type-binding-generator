@@ -1,17 +1,12 @@
 import { ABI, abiChild, iochild, _function } from "./type-mapping";
-import * as fs from "fs";
 
 export default class AbiReader {
-  public static read(path: string, raw?: string) {
-    const abiString = raw ?? this.readFile(path);
+  public static read(abi: string) {
+    const abiString = abi;
     const abiRaw = this.parseRaw(abiString);
     const bindABI = this.bindABI(abiRaw);
 
     return bindABI;
-  }
-
-  private static readFile(path: string): string {
-    return fs.readFileSync(path, "utf-8");
   }
 
   private static parseRaw(raw: string) {
