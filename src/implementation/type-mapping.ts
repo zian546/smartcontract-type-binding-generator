@@ -2,7 +2,8 @@ export const string = "string";
 export const stringMapping = "string";
 
 export const _function = "function";
-
+// TODO: handle the difference number types e.g 48 bit+ = ethers.bigNumber.
+// TODO : handle array input.
 export const int = "int";
 export const uint = "uint";
 export const intMapping = "number";
@@ -44,7 +45,7 @@ export type functionLiteral = {
   name: string;
   constant: boolean;
   signatureLiteral?: string;
-  body?: any;
+  bodyLiteral?: string;
   attributes: {
     inputs: {
       obj: iochild[];

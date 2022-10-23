@@ -4,6 +4,9 @@ import {
   COLON,
   COMMA,
   CONTRACT_TOKEN,
+  DEFAULT_ABI_PARAM,
+  DEFAULT_ADDRESS_NAME,
+  DEFAULT_INSTANCE_NAME,
   NEWLINE,
   OPEN_BRACE,
   PRIVATE_IDENT,
@@ -18,9 +21,9 @@ export default class ClassParser {
   private defaultAddressName: string;
 
   constructor() {
-    this.defaultInstanceName = "contractInstance";
-    this.defaultAddressName = "contractAddress";
-    this.defaultAbiParam = "abi";
+    this.defaultInstanceName = DEFAULT_INSTANCE_NAME;
+    this.defaultAddressName = DEFAULT_ADDRESS_NAME;
+    this.defaultAbiParam = DEFAULT_ABI_PARAM;
   }
   public parse(name: string, body: string) {
     const importDirective = 'import * as ethers from "ethers"';
@@ -36,7 +39,6 @@ export default class ClassParser {
       this.getConstructor(),
       NEWLINE,
       body,
-      NEWLINE,
       CLOSE_BRACE
     );
 
@@ -76,7 +78,8 @@ export default class ClassParser {
       addressLiteral,
       NEWLINE,
       TABLINE,
-      CLOSE_BRACE
+      CLOSE_BRACE,
+      NEWLINE
     );
   }
 

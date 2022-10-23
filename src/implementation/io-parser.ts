@@ -35,6 +35,7 @@ import {
   PUBLIC_IDENT,
 } from "./token";
 import AbiGrouper from "./grouper";
+import BodyParser from "./body-parser";
 
 const UNNAMED_VAR = "argv";
 const SINGLE_ELEMENT = 1;
@@ -48,16 +49,21 @@ export default class IoParser extends AbiGrouper {
     this.unnamedCounter = 0;
   }
   private getVarCounter(): string {
+    this.incrementCounter();
     return UNNAMED_VAR.concat(this.unnamedCounter.toString());
   }
   private buildInputLiteral(input: iochild): string {
     const inputType = this.determineType(input.type);
-    const inputName =
-      input.name.length === 0 ? this.getVarCounter() : input.name;
-    this.incrementCounter();
+    const inputName = this.determineInputName(input).name;
     const inputLiteral = inputName.concat(COLON, SPACE, inputType);
 
     return inputLiteral;
+  }
+
+  // we intentionally modify this to generate arguments name for the function body
+  private determineInputName(input: iochild) {
+    input.name = input.name.length === 0 ? this.getVarCounter() : input.name;
+    return input;
   }
 
   private parseInput(value: iochild[]) {
@@ -101,6 +107,7 @@ export default class IoParser extends AbiGrouper {
       fn.attributes.outputs.literals = this.writeOutput(
         fn.attributes.outputs.obj
       );
+      fn.bodyLiteral = BodyParser.parse(fn);
       fn.signatureLiteral = this.parseFnSignature(fn);
     }
 
@@ -155,15 +162,18 @@ export default class IoParser extends AbiGrouper {
       ASYNC,
       SPACE,
       fnObj.name,
-      fnObj.attributes.inputs.literals as any,
+      fnObj.attributes.inputs.literals as string,
       this.determineOutput(fnObj),
       // function implementation will starts here
       SPACE,
       // TODO : populate function body with ethers js
       // just put open and close brace for now
       OPEN_BRACE,
-      // this space will become function implementation later
+      fnObj.bodyLiteral as string,
+      NEWLINE,
+      TABLINE,
       CLOSE_BRACE,
+      NEWLINE,
       NEWLINE
     );
 
