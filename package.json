@@ -9,10 +9,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.13",
+    "ethers": "^5.7.2"
+  },
   "dependencies": {
     "fs-extra": "^10.1.0"
-  },
-  "devDependencies": {
-    "@types/fs-extra": "^9.0.13"
   }
 }

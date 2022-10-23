@@ -1,7 +1,7 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 import { ABI } from "./type-mapping";
-import IoParser from "./io_parser";
+import IoParser from "./io-parser";
 import AbiReader from "./reader";
 
 const TS = ".ts";
