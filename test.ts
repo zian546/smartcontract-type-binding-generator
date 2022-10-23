@@ -1,8 +1,12 @@
 import Writer from "./src/implementation/writer";
 import * as fs from "fs";
+import ClassParser from "./src/implementation/class-parser";
 
 const abi = fs.readFileSync("./abi/auctions/auction.json");
-const output = new Writer().write(abi.toString());
+const writer = new Writer();
+const body = writer.write("", abi.toString());
+const output = ClassParser.parse("test", body);
 
 console.log(output);
+
 fs.writeFileSync("./output.ts", output);

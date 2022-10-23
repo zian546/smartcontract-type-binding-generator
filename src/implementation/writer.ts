@@ -6,11 +6,15 @@ import AbiReader from "./reader";
 
 const TS = ".ts";
 export default class Writer extends IoParser {
+  private contract: string | undefined;
+  private abiObj: ABI | undefined;
   /**
+   * @param name the contract name
    * @param abi the contracts abi in string format
    */
-  public write(abi: string) {
+  public write(name: string, abi: string) {
     const abiObj = AbiReader.read(abi);
+    this.abiObj = abiObj;
     const tree = this.parse(abiObj);
     let contract: string = "";
 
@@ -19,5 +23,9 @@ export default class Writer extends IoParser {
     }
 
     return contract;
+  }
+
+  public getAbi() {
+    return this.abiObj;
   }
 }
