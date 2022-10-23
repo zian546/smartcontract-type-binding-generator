@@ -18,3 +18,7 @@ export const CLOSE_ANGLE_BRACKET = ">";
 export const OPEN_BRACKET = "[";
 export const CLOSE_BRACKET = "]";
 export const PUBLIC_IDENT = "public";
+export const PRIVATE_IDENT = "private";
+export const STRING_TOKEN = "string";
+export const CONTRACT_TOKEN = "ethers.Contract";
+export const ANY_TOKEN = "any";
