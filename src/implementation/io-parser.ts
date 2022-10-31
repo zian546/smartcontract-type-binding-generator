@@ -31,7 +31,7 @@ import {
   CLOSE_ANGLE_BRACKET,
   OPEN_BRACKET,
   CLOSE_BRACKET,
-  TABLINE,
+  FORMAT_LINE,
   PUBLIC_IDENT,
 } from "./token";
 import AbiGrouper from "./grouper";
@@ -156,7 +156,7 @@ export default class IoParser extends AbiGrouper {
   }
 
   private parseFnSignature(fnObj: functionLiteral) {
-    const signature = TABLINE.concat(
+    const signature = FORMAT_LINE.concat(
       PUBLIC_IDENT,
       SPACE,
       ASYNC,
@@ -171,7 +171,7 @@ export default class IoParser extends AbiGrouper {
       OPEN_BRACE,
       fnObj.bodyLiteral as string,
       NEWLINE,
-      TABLINE,
+      FORMAT_LINE,
       CLOSE_BRACE,
       NEWLINE,
       NEWLINE

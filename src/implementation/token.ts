@@ -12,7 +12,7 @@ export const COMMA = ",";
 export const ASYNC = "async";
 export const EXPORT = "export";
 export const NEWLINE = "\n";
-export const TABLINE = "\t";
+export const FORMAT_LINE = "  ";
 export const FAT_ARROW = "=>";
 export const PROMISE = "Promise";
 export const OPEN_ANGLE_BRACKET = "<";

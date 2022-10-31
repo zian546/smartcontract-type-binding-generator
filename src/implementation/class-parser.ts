@@ -12,10 +12,10 @@ import {
   PRIVATE_IDENT,
   SPACE,
   STRING_TOKEN,
-  TABLINE,
+  FORMAT_LINE,
 } from "./token";
 
-export default class ClassParser {
+export default class Parser {
   private defaultAbiParam: string;
   private defaultInstanceName: string;
   private defaultAddressName: string;
@@ -47,7 +47,7 @@ export default class ClassParser {
 
   private getConstructor() {
     const constructorLiteral = `constructor(${this.inputLiteral()})`;
-    return TABLINE.concat(constructorLiteral, this.getConstructorBody());
+    return FORMAT_LINE.concat(constructorLiteral, this.getConstructorBody());
   }
   private inputLiteral() {
     return this.defaultAddressName.concat(
@@ -69,15 +69,15 @@ export default class ClassParser {
     return SPACE.concat(
       OPEN_BRACE,
       NEWLINE,
-      TABLINE,
-      TABLINE,
+      FORMAT_LINE,
+      FORMAT_LINE,
       instanceLiteral,
       NEWLINE,
-      TABLINE,
-      TABLINE,
+      FORMAT_LINE,
+      FORMAT_LINE,
       addressLiteral,
       NEWLINE,
-      TABLINE,
+      FORMAT_LINE,
       CLOSE_BRACE,
       NEWLINE
     );
@@ -87,10 +87,10 @@ export default class ClassParser {
     const contractInstanceName = this.getContractInstanceName();
     const addressName = this.getAddressName();
 
-    return TABLINE.concat(
+    return FORMAT_LINE.concat(
       contractInstanceName,
       NEWLINE,
-      TABLINE,
+      FORMAT_LINE,
       addressName,
       NEWLINE
     );

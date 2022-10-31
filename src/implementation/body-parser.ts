@@ -11,15 +11,15 @@ import {
   RETURN_TOKEN,
   SEMI_COLON,
   SPACE,
-  TABLINE,
+  FORMAT_LINE,
 } from "./token";
 import { functionLiteral } from "./type-mapping";
 
 export default class BodyParser {
   public static parse(fn: functionLiteral) {
     const txLiteral = NEWLINE.concat(
-      TABLINE,
-      TABLINE,
+      FORMAT_LINE,
+      FORMAT_LINE,
       CONSTANT_TOKEN,
       SPACE,
       DEFAULT_TX_NAME,
@@ -33,8 +33,8 @@ export default class BodyParser {
       this.parseInput(fn),
       SEMI_COLON,
       NEWLINE,
-      TABLINE,
-      TABLINE,
+      FORMAT_LINE,
+      FORMAT_LINE,
       RETURN_TOKEN,
       SPACE,
       DEFAULT_TX_NAME,
