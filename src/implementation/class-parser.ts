@@ -13,17 +13,22 @@ import {
   SPACE,
   STRING_TOKEN,
   FORMAT_LINE,
+  SIGNER_OR_PROVIDER_TOKEN,
+  SIGNER_OR_PROVIDER_TYPE_TOKEN,
+  OPT_TOKEN,
 } from "./token";
 
 export default class Parser {
   private defaultAbiParam: string;
   private defaultInstanceName: string;
   private defaultAddressName: string;
+  private defaultSignerOrProviderName: string;
 
   constructor() {
     this.defaultInstanceName = DEFAULT_INSTANCE_NAME;
     this.defaultAddressName = DEFAULT_ADDRESS_NAME;
     this.defaultAbiParam = DEFAULT_ABI_PARAM;
+    this.defaultSignerOrProviderName = SIGNER_OR_PROVIDER_TOKEN;
   }
   public parse(name: string, body: string) {
     const importDirective = 'import * as ethers from "ethers"';
@@ -59,11 +64,18 @@ export default class Parser {
       this.defaultAbiParam,
       COLON,
       SPACE,
-      ANY_TOKEN
+      ANY_TOKEN,
+      COMMA,
+      SPACE,
+      SIGNER_OR_PROVIDER_TOKEN,
+      OPT_TOKEN,
+      COLON,
+      SPACE,
+      SIGNER_OR_PROVIDER_TYPE_TOKEN
     );
   }
   private getConstructorBody() {
-    const instanceLiteral = `this.${this.defaultInstanceName} = new ethers.Contract(${this.defaultAddressName},${this.defaultAbiParam});`;
+    const instanceLiteral = `this.${this.defaultInstanceName} = new ethers.Contract(${this.defaultAddressName}, ${this.defaultAbiParam}, ${this.defaultSignerOrProviderName});`;
     const addressLiteral = `this.${this.defaultAddressName} = ${this.defaultAddressName};`;
 
     return SPACE.concat(

@@ -1,6 +1,6 @@
 {
   "name": "smartcontract-type-binding-generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "files": [
@@ -9,7 +9,14 @@
   "scripts": {
     "build": "npx tsc"
   },
-  "keywords": [],
+  "keywords": [
+    "ethereum",
+    "web3",
+    "binding",
+    "types",
+    "type",
+    "smartcontract"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {

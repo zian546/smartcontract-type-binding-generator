@@ -13,6 +13,7 @@ import {
   ABI,
   functionLiteral,
   _function,
+  arrayExt,
 } from "./type-mapping";
 import {
   COLON,
@@ -196,6 +197,12 @@ export default class IoParser extends AbiGrouper {
   }
 
   private determineType(value: string): string {
+    return value.includes(arrayExt)
+      ? this.inferTypes(value).concat(arrayExt)
+      : this.inferTypes(value);
+  }
+
+  private inferTypes(value: string) {
     if (value.includes(int) || value.includes(uint)) return intMapping;
     else if (value === address) return addressMapping;
     else if (value === string) return stringMapping;

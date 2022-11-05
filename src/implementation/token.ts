@@ -32,3 +32,7 @@ export const DEFAULT_ADDRESS_NAME = "contractAddress";
 export const DEFAULT_INSTANCE_NAME = "contractInstance";
 export const DEFAULT_TX_NAME = "tx";
 export const DEFAULT_CONTRACT_CALL = "this.contractInstance.";
+export const OPT_TOKEN = "?";
+export const SIGNER_OR_PROVIDER_TOKEN = "signerOrProvider";
+export const SIGNER_OR_PROVIDER_TYPE_TOKEN =
+  "ethers.ethers.Signer | ethers.ethers.providers.Provider";

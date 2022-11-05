@@ -25,6 +25,8 @@ export const payableMapping = false;
 export const fallbackMutabilityMapping = true;
 export type ABI = abiChild[];
 
+export const arrayExt = "[]";
+
 export type abiChild = {
   constant: boolean;
   inputs: iochild[];
