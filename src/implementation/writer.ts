@@ -4,13 +4,18 @@ import { ABI } from "./type-mapping";
 import IoParser from "./io-parser";
 import AbiReader from "./reader";
 
-const TS = ".ts";
+export type writerOtions = {
+  /**
+   * specify what bindings to generate (default `typescript`)
+   */
+  lang?: "js" | "ts";
+};
 export class Writer extends IoParser {
   /**
    * @param name the contract name
    * @param abi the contracts abi in string format
    */
-  public write(name: string, abi: string) {
+  public write(name: string, abi: string, opt?: writerOtions) {
     const abiObj = AbiReader.read(abi);
     const tree = this.parse(abiObj);
     let contract: string = "";

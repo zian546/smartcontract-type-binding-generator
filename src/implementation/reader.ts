@@ -37,17 +37,15 @@ export default class AbiReader {
 
   private static parseIo(input: any[]): iochild[] {
     if (input === undefined || input.length === 0) return [];
-    else {
-      let childs: iochild[] = [];
+    let childs: iochild[] = [];
 
-      for (let i = 0; i < input.length; i++) {
-        childs.push({
-          name: input[i].name,
-          type: input[i].type,
-        });
-      }
-
-      return childs;
+    for (let i = 0; i < input.length; i++) {
+      childs.push({
+        name: input[i].name,
+        type: input[i].type,
+      });
     }
+
+    return childs;
   }
 }
