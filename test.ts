@@ -1,4 +1,4 @@
-import Writer from "./src/implementation/writer";
+import { Writer } from "./src/implementation/writer";
 import * as fs from "fs";
 import Parser from "./src/implementation/class-parser";
 import { ABI } from "./src/implementation/type-mapping";
