@@ -41,7 +41,7 @@ import { TypescriptBodyParser } from "./body-parser";
 
 const UNNAMED_VAR = "argv";
 const SINGLE_ELEMENT = 1;
-export class TypescriptAssembler {
+export class TypescriptMethodAssembler {
   private unnamedCounter: number = 0;
 
   private incrementCounter() {
@@ -166,8 +166,6 @@ export class TypescriptAssembler {
       this.determineOutput(fnObj),
       // function implementation will starts here
       SPACE,
-      // TODO : populate function body with ethers js
-      // just put open and close brace for now
       OPEN_BRACE,
       fnObj.bodyLiteral as string,
       NEWLINE,

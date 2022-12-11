@@ -1,7 +1,7 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 import { ABI, Branch, Tree } from "./type-mapping";
-import { TypescriptAssembler } from "./typescript/assembler";
+import { TypescriptMethodAssembler } from "./typescript/assembler";
 import { AbiReader } from "./reader";
 import { TypescriptClassParser } from "./typescript/class-parser";
 import { TreeBuilder } from "./tree-builder";
@@ -28,11 +28,13 @@ export type writerOtions =
 
 export class Writer {
   typeScriptClassParser: TypescriptClassParser;
+  typeScriptAssembler: TypescriptMethodAssembler;
   abiReader: AbiReader;
   TreeBuilder: TreeBuilder;
 
   constructor() {
     this.abiReader = new AbiReader();
+    this.typeScriptAssembler = new TypescriptMethodAssembler();
     this.typeScriptClassParser = new TypescriptClassParser();
     this.TreeBuilder = new TreeBuilder();
   }
@@ -42,30 +44,35 @@ export class Writer {
    * @param rawAbi the contracts abi in string format
    */
   public write(name: string, rawAbi: string, opt?: writerOtions) {
-    const abiObj = AbiReader.read(rawAbi);
-    const Branch = this.parse(abiObj);
-    let contract: string = "";
+    const abi = this.inferAbi(rawAbi);
+    const tree = this.buildSyntaxTree(abi);
 
-    for (const node of Branch) {
-      contract = contract.concat(node.signatureLiteral as string);
+    let bindings: string;
+
+    if (opt === undefined || opt?.lang === undefined || opt?.lang === "ts") {
+      bindings = this.buildTypescriptBinding(name, tree);
     }
 
-    return contract;
+    return bindings;
   }
 
   private inferAbi(raw: string) {
     return this.abiReader.read(raw);
   }
 
-  private buildSyntaxBranch(abi: ABI) {
+  private buildSyntaxTree(abi: ABI) {
     return this.TreeBuilder.build(abi);
   }
 
-  private buildTypescriptBinding(tree: Tree) {
-    let contract: string;
+  private buildTypescriptBinding(name: string, tree: Tree) {
+    tree = this.typeScriptAssembler.build(tree);
+    let body: string = "";
 
     for (const node of tree) {
-      contract = contract.concat(node.signatureLiteral as string);
+      body = body.concat(node.signatureLiteral as string);
     }
+
+    const bindings = this.typeScriptClassParser.parse(name, body);
+    return bindings;
   }
 }

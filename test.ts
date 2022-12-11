@@ -5,7 +5,6 @@ import { ABI } from "./src/implementation/type-mapping";
 
 const abi = fs.readFileSync("./abi/auctions/auction.json");
 const writer = new Writer();
-const body = writer.write("", abi.toString());
-const output = new TypescriptClassParser().parse("test", body);
+const output = writer.write("test", abi.toString("utf-8"));
 
 fs.writeFileSync("./output.ts", output);
