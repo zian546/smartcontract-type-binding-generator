@@ -37,10 +37,7 @@ export class DocGen {
 
     branch.attributes.outputs.jsDoc = this.generateOutput(outputs);
   }
-  /**
-   *
-   * @param branch
-   */
+
   private buildJsDoc(branch: Branch) {
     branch.jsDoc = `/**\n ${branch.attributes.inputs.jsDoc} ${branch.attributes.outputs.jsDoc} */`;
   }
