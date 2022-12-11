@@ -9,7 +9,7 @@ import {
   payableMapping,
 } from "./type-mapping";
 
-export class BranchBuilder {
+export class TreeBuilder {
   public build(abi: ABI) {
     let fnLiteral: Branch[] = [];
     for (const node of abi) {

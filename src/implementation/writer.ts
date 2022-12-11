@@ -4,7 +4,7 @@ import { ABI, Branch } from "./type-mapping";
 import { TypescriptParser } from "./typescript/io-parser";
 import { AbiReader } from "./reader";
 import { TypescriptClassParser } from "./typescript/class-parser";
-import { BranchBuilder } from "./grouper";
+import { TreeBuilder } from "./grouper";
 
 export type writerOtions =
   | {
@@ -30,13 +30,13 @@ export class Writer {
   typeScriptTypescriptBodyParser: TypescriptParser;
   typeScriptClassParser: TypescriptClassParser;
   abiReader: AbiReader;
-  BranchBuilder: BranchBuilder;
+  TreeBuilder: TreeBuilder;
 
   constructor() {
     this.abiReader = new AbiReader();
     this.typeScriptTypescriptBodyParser = new TypescriptParser();
     this.typeScriptClassParser = new TypescriptClassParser();
-    this.BranchBuilder = new BranchBuilder();
+    this.TreeBuilder = new TreeBuilder();
   }
 
   /**
@@ -60,11 +60,11 @@ export class Writer {
   }
 
   private buildSyntaxBranch(abi: ABI) {
-    return this.BranchBuilder.build(abi);
+    return this.TreeBuilder.build(abi);
   }
 
-  private buildTypescriptBinding(Branch: Branch) {
-    for (const node of Branch) {
+  private buildTypescriptBinding(tree: Tree) {
+    for (const node of tree) {
       contract = contract.concat(node.signatureLiteral as string);
     }
   }

@@ -14,6 +14,7 @@ import {
   Branch,
   _function,
   arrayExt,
+  Tree,
 } from "../type-mapping";
 import {
   COLON,
@@ -35,7 +36,7 @@ import {
   FORMAT_LINE,
   PUBLIC_IDENT,
 } from "../token";
-import { BranchBuilder } from "../grouper";
+import { TreeBuilder } from "../grouper";
 import { TypescriptBodyParser } from "./body-parser";
 
 const UNNAMED_VAR = "argv";
@@ -97,8 +98,8 @@ export class TypescriptParser {
     return SPACE.concat(OPEN_PAR);
   }
 
-  public parse(Branch: Branch[]) {
-    for (const fn of Branch) {
+  public parse(Tree: Tree) {
+    for (const fn of Tree) {
       // it is IMPORTANT that we parse signature literal AFTER parsing input and output literals.
       // because we need input and output literals to complete function signature literals.
 
@@ -110,7 +111,7 @@ export class TypescriptParser {
       fn.signatureLiteral = this.parseFnSignature(fn);
     }
 
-    return Branch;
+    return Tree;
   }
 
   private writeInput(value: iochild[]) {
