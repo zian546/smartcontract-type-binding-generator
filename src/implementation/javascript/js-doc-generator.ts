@@ -1,13 +1,14 @@
 import { FORMAT_LINE } from "../token";
-import { Branch, iochild } from "../type-mapping";
+import { Branch, fallbackMapping, iochild } from "../type-mapping";
 
 export class DocGen {
   private generateParam(fragment: iochild) {
-    return `${FORMAT_LINE}* @param {${fragment.inferredTypes}} ${fragment.name}\n`;
+    return `${FORMAT_LINE} * @param {${fragment.inferredTypes}} ${fragment.name}\n`;
   }
 
   private generateOutput(fragments: string[]) {
-    return `${FORMAT_LINE}* @returns {${fragments}}\n`;
+    const outputs = fragments.length === 0 ? fallbackMapping : fragments;
+    return `${FORMAT_LINE} * @returns {${outputs}}\n`;
   }
 
   // TODO : make method to concat multiple jsdoc literals into 1 for that tree branch
@@ -40,6 +41,6 @@ export class DocGen {
   }
 
   private buildJsDoc(branch: Branch) {
-    branch.jsDoc = `/**\n ${branch.attributes.inputs.jsDoc} ${branch.attributes.outputs.jsDoc} ${FORMAT_LINE}*/\n`;
+    branch.jsDoc = `/**\n${branch.attributes.inputs.jsDoc}${branch.attributes.outputs.jsDoc} ${FORMAT_LINE}*/\n`;
   }
 }
