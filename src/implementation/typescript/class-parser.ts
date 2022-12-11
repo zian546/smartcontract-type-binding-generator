@@ -32,7 +32,7 @@ export class TypescriptClassParser {
   }
   public parse(name: string, body: string) {
     const importDirective = 'import * as ethers from "ethers"';
-    const classSignature = `export default class ${name} `;
+    const classSignature = `export class ${name} `;
     const contract = importDirective.concat(
       NEWLINE,
       NEWLINE,
