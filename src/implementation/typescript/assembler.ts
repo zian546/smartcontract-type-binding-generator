@@ -36,12 +36,12 @@ import {
   FORMAT_LINE,
   PUBLIC_IDENT,
 } from "../token";
-import { TreeBuilder } from "../grouper";
+import { TreeBuilder } from "../tree-builder";
 import { TypescriptBodyParser } from "./body-parser";
 
 const UNNAMED_VAR = "argv";
 const SINGLE_ELEMENT = 1;
-export class TypescriptParser {
+export class TypescriptAssembler {
   private unnamedCounter: number = 0;
 
   private incrementCounter() {
@@ -98,7 +98,7 @@ export class TypescriptParser {
     return SPACE.concat(OPEN_PAR);
   }
 
-  public parse(Tree: Tree) {
+  public build(Tree: Tree) {
     for (const fn of Tree) {
       // it is IMPORTANT that we parse signature literal AFTER parsing input and output literals.
       // because we need input and output literals to complete function signature literals.

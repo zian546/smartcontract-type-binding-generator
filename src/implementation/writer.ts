@@ -1,10 +1,10 @@
 import * as fs from "fs-extra";
 import * as path from "path";
-import { ABI, Branch } from "./type-mapping";
-import { TypescriptParser } from "./typescript/io-parser";
+import { ABI, Branch, Tree } from "./type-mapping";
+import { TypescriptAssembler } from "./typescript/assembler";
 import { AbiReader } from "./reader";
 import { TypescriptClassParser } from "./typescript/class-parser";
-import { TreeBuilder } from "./grouper";
+import { TreeBuilder } from "./tree-builder";
 
 export type writerOtions =
   | {
@@ -27,14 +27,12 @@ export type writerOtions =
     };
 
 export class Writer {
-  typeScriptTypescriptBodyParser: TypescriptParser;
   typeScriptClassParser: TypescriptClassParser;
   abiReader: AbiReader;
   TreeBuilder: TreeBuilder;
 
   constructor() {
     this.abiReader = new AbiReader();
-    this.typeScriptTypescriptBodyParser = new TypescriptParser();
     this.typeScriptClassParser = new TypescriptClassParser();
     this.TreeBuilder = new TreeBuilder();
   }
@@ -64,6 +62,8 @@ export class Writer {
   }
 
   private buildTypescriptBinding(tree: Tree) {
+    let contract: string;
+
     for (const node of tree) {
       contract = contract.concat(node.signatureLiteral as string);
     }
