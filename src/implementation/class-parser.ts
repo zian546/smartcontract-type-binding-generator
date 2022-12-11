@@ -18,7 +18,7 @@ import {
   OPT_TOKEN,
 } from "./token";
 
-export default class Parser {
+export class TypescriptClassParser {
   private defaultAbiParam: string;
   private defaultInstanceName: string;
   private defaultAddressName: string;

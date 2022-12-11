@@ -43,7 +43,7 @@ export type iochild = {
 };
 
 // TODO : make body using ethers js
-export type functionLiteral = {
+export type Tree = {
   name: string;
   constant: boolean;
   signatureLiteral?: string;

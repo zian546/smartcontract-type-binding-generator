@@ -2,18 +2,18 @@ import {
   ABI,
   abiChild,
   fallbackMutabilityMapping,
-  functionLiteral,
+  Tree,
   nonpayable,
   nonpayableMapping,
   payable,
   payableMapping,
 } from "./type-mapping";
 
-export default class AbiGrouper {
-  public group(abi: ABI) {
-    let fnLiteral: functionLiteral[] = [];
+export class TreeBuilder {
+  public build(abi: ABI) {
+    let fnLiteral: Tree[] = [];
     for (const node of abi) {
-      const parsedChild: functionLiteral = this.groupAttributes(node);
+      const parsedChild: Tree = this.groupAttributes(node);
 
       fnLiteral.push(parsedChild);
     }
@@ -24,7 +24,7 @@ export default class AbiGrouper {
     else if (stateMutability === nonpayable) return nonpayableMapping;
     else return fallbackMutabilityMapping;
   }
-  private groupAttributes(node: abiChild): functionLiteral {
+  private groupAttributes(node: abiChild): Tree {
     return {
       name: node.name,
       constant: this.determineConstant(node.stateMutability),

@@ -11,7 +11,7 @@ import {
   boolMapping,
   fallbackMapping,
   ABI,
-  functionLiteral,
+  Tree,
   _function,
   arrayExt,
 } from "./type-mapping";
@@ -35,17 +35,12 @@ import {
   FORMAT_LINE,
   PUBLIC_IDENT,
 } from "./token";
-import AbiGrouper from "./grouper";
-import BodyParser from "./body-parser";
+import { TreeBuilder } from "./grouper";
+import { TypescriptBodyParser } from "./body-parser";
 
 const UNNAMED_VAR = "argv";
 const SINGLE_ELEMENT = 1;
-export class TypescriptIoParser {
-  private abiInferer: AbiGrouper;
-
-  constructor() {
-    this.abiInferer = new AbiGrouper();
-  }
+export class TypescriptParser {
   private unnamedCounter: number = 0;
 
   private incrementCounter() {
@@ -102,10 +97,8 @@ export class TypescriptIoParser {
     return SPACE.concat(OPEN_PAR);
   }
 
-  public parse(abi: ABI) {
-    const fnGroup = this.abiInferer.group(abi);
-
-    for (const fn of fnGroup) {
+  public parse(tree: Tree[]) {
+    for (const fn of tree) {
       // it is IMPORTANT that we parse signature literal AFTER parsing input and output literals.
       // because we need input and output literals to complete function signature literals.
 
@@ -113,11 +106,11 @@ export class TypescriptIoParser {
       fn.attributes.outputs.literals = this.writeOutput(
         fn.attributes.outputs.obj
       );
-      fn.bodyLiteral = BodyParser.parse(fn);
+      fn.bodyLiteral = TypescriptBodyParser.parse(fn);
       fn.signatureLiteral = this.parseFnSignature(fn);
     }
 
-    return fnGroup;
+    return tree;
   }
 
   private writeInput(value: iochild[]) {
@@ -161,7 +154,7 @@ export class TypescriptIoParser {
     else return PROMISE.concat(OPEN_ANGLE_BRACKET, OPEN_BRACKET);
   }
 
-  private parseFnSignature(fnObj: functionLiteral) {
+  private parseFnSignature(fnObj: Tree) {
     const signature = FORMAT_LINE.concat(
       PUBLIC_IDENT,
       SPACE,
@@ -186,7 +179,7 @@ export class TypescriptIoParser {
     return signature;
   }
 
-  private determineOutput(fnObj: functionLiteral) {
+  private determineOutput(fnObj: Tree) {
     const _eval = fnObj.attributes.outputs.obj.length;
     const constant = fnObj.constant;
 

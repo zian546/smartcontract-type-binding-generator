@@ -1,8 +1,10 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 import { ABI } from "./type-mapping";
-import { IoParser } from "./io-parser";
-import AbiReader from "./reader";
+import { TypescriptParser } from "./io-parser";
+import { AbiReader } from "./reader";
+import { TypescriptClassParser } from "./class-parser";
+import { TreeBuilder } from "./grouper";
 
 export type writerOtions =
   | {
@@ -22,13 +24,25 @@ export type writerOtions =
       truffle: boolean;
     };
 
-export class Writer extends IoParser {
+export class Writer {
+  typeScriptTypescriptBodyParser: TypescriptParser;
+  typeScriptClassParser: TypescriptClassParser;
+  abiReader: AbiReader;
+  treeBuilder: TreeBuilder;
+
+  constructor() {
+    this.abiReader = new AbiReader();
+    this.typeScriptTypescriptBodyParser = new TypescriptParser();
+    this.typeScriptClassParser = new TypescriptClassParser();
+    this.treeBuilder = new TreeBuilder();
+  }
+
   /**
    * @param name the contract name
-   * @param abi the contracts abi in string format
+   * @param rawAbi the contracts abi in string format
    */
-  public write(name: string, abi: string, opt?: writerOtions) {
-    const abiObj = AbiReader.read(abi);
+  public write(name: string, rawAbi: string, opt?: writerOtions) {
+    const abiObj = AbiReader.read(rawAbi);
     const tree = this.parse(abiObj);
     let contract: string = "";
 
@@ -38,4 +52,18 @@ export class Writer extends IoParser {
 
     return contract;
   }
+
+  private inferAbi(raw: string) {
+    return this.abiReader.read(raw);
+  }
+
+  private buildSyntaxTree(abi: ABI) {
+    return this.treeBuilder.build(abi);
+  }
+
+  private buildTypescriptBinding(rawAbi: string) {
+    const abi = this.inferAbi(rawAbi);
+  }
+
+  private buildBody();
 }
