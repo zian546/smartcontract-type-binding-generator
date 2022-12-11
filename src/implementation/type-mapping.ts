@@ -2,8 +2,6 @@ export const string = "string";
 export const stringMapping = "string";
 
 export const _function = "function";
-// TODO: handle the difference number types e.g 48 bit+ = ethers.bigNumber.
-// TODO : handle array input.
 export const int = "int";
 export const uint = "uint";
 export const intMapping = "number";
@@ -40,22 +38,29 @@ export type abiChild = {
 export type iochild = {
   name: string;
   type: string;
+  inferredTypes?: string;
+  jsDoc?: string;
 };
 
 // TODO : make body using ethers js
-export type functionLiteral = {
+export type Branch = {
   name: string;
   constant: boolean;
   signatureLiteral?: string;
   bodyLiteral?: string;
+  jsDoc?: string;
   attributes: {
     inputs: {
       obj: iochild[];
+      jsDoc?: string;
       literals?: string;
     };
     outputs: {
       obj: iochild[];
+      jsDoc?: string;
       literals?: string;
     };
   };
 };
+
+export type Tree = Branch[];

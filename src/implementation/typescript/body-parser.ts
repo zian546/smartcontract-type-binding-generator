@@ -12,11 +12,11 @@ import {
   SEMI_COLON,
   SPACE,
   FORMAT_LINE,
-} from "./token";
-import { functionLiteral } from "./type-mapping";
+} from "../token";
+import { Branch } from "../type-mapping";
 
-export default class BodyParser {
-  public static parse(fn: functionLiteral) {
+export class TypescriptBodyParser {
+  public static parse(fn: Branch) {
     const txLiteral = NEWLINE.concat(
       FORMAT_LINE,
       FORMAT_LINE,
@@ -44,7 +44,7 @@ export default class BodyParser {
     return txLiteral;
   }
 
-  private static parseInput(fn: functionLiteral) {
+  private static parseInput(fn: Branch) {
     let input = OPEN_PAR;
     const lastIndex = fn.attributes.inputs.obj.length;
     for (const i in fn.attributes.inputs.obj) {

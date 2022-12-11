@@ -11,10 +11,11 @@ import {
   boolMapping,
   fallbackMapping,
   ABI,
-  functionLiteral,
+  Branch,
   _function,
   arrayExt,
-} from "./type-mapping";
+  Tree,
+} from "../type-mapping";
 import {
   COLON,
   SPACE,
@@ -34,13 +35,13 @@ import {
   CLOSE_BRACKET,
   FORMAT_LINE,
   PUBLIC_IDENT,
-} from "./token";
-import AbiGrouper from "./grouper";
-import BodyParser from "./body-parser";
+} from "../token";
+import { TreeBuilder } from "../tree-builder";
+import { TypescriptBodyParser } from "./body-parser";
 
 const UNNAMED_VAR = "argv";
 const SINGLE_ELEMENT = 1;
-export default class IoParser extends AbiGrouper {
+export class TypescriptMethodAssembler {
   private unnamedCounter: number = 0;
 
   private incrementCounter() {
@@ -97,10 +98,8 @@ export default class IoParser extends AbiGrouper {
     return SPACE.concat(OPEN_PAR);
   }
 
-  protected parse(abi: ABI) {
-    const fnGroup = this.group(abi);
-
-    for (const fn of fnGroup) {
+  public build(Tree: Tree) {
+    for (const fn of Tree) {
       // it is IMPORTANT that we parse signature literal AFTER parsing input and output literals.
       // because we need input and output literals to complete function signature literals.
 
@@ -108,11 +107,11 @@ export default class IoParser extends AbiGrouper {
       fn.attributes.outputs.literals = this.writeOutput(
         fn.attributes.outputs.obj
       );
-      fn.bodyLiteral = BodyParser.parse(fn);
+      fn.bodyLiteral = TypescriptBodyParser.parse(fn);
       fn.signatureLiteral = this.parseFnSignature(fn);
     }
 
-    return fnGroup;
+    return Tree;
   }
 
   private writeInput(value: iochild[]) {
@@ -156,7 +155,7 @@ export default class IoParser extends AbiGrouper {
     else return PROMISE.concat(OPEN_ANGLE_BRACKET, OPEN_BRACKET);
   }
 
-  private parseFnSignature(fnObj: functionLiteral) {
+  private parseFnSignature(fnObj: Branch) {
     const signature = FORMAT_LINE.concat(
       PUBLIC_IDENT,
       SPACE,
@@ -167,8 +166,6 @@ export default class IoParser extends AbiGrouper {
       this.determineOutput(fnObj),
       // function implementation will starts here
       SPACE,
-      // TODO : populate function body with ethers js
-      // just put open and close brace for now
       OPEN_BRACE,
       fnObj.bodyLiteral as string,
       NEWLINE,
@@ -181,7 +178,7 @@ export default class IoParser extends AbiGrouper {
     return signature;
   }
 
-  private determineOutput(fnObj: functionLiteral) {
+  private determineOutput(fnObj: Branch) {
     const _eval = fnObj.attributes.outputs.obj.length;
     const constant = fnObj.constant;
 

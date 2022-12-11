@@ -1,7 +1,7 @@
 import { ABI, abiChild, iochild, _function } from "./type-mapping";
 
-export default class AbiReader {
-  public static read(abi: string) {
+export class AbiReader {
+  public read(abi: string) {
     const abiString = abi;
     const abiRaw = this.parseRaw(abiString);
     const bindABI = this.bindABI(abiRaw);
@@ -9,11 +9,11 @@ export default class AbiReader {
     return bindABI;
   }
 
-  private static parseRaw(raw: string) {
+  private parseRaw(raw: string) {
     return JSON.parse(raw);
   }
 
-  private static bindABI(raw: any): ABI {
+  private bindABI(raw: any): ABI {
     let abi: ABI = [];
 
     for (let i = 0; i < raw.length; i++) {
@@ -23,7 +23,7 @@ export default class AbiReader {
     return abi;
   }
 
-  private static bindChild(child: any): abiChild {
+  private bindChild(child: any): abiChild {
     return {
       constant: child.constant,
       inputs: this.parseIo(child.inputs),
@@ -35,19 +35,17 @@ export default class AbiReader {
     };
   }
 
-  private static parseIo(input: any[]): iochild[] {
+  private parseIo(input: any[]): iochild[] {
     if (input === undefined || input.length === 0) return [];
-    else {
-      let childs: iochild[] = [];
+    let childs: iochild[] = [];
 
-      for (let i = 0; i < input.length; i++) {
-        childs.push({
-          name: input[i].name,
-          type: input[i].type,
-        });
-      }
-
-      return childs;
+    for (let i = 0; i < input.length; i++) {
+      childs.push({
+        name: input[i].name,
+        type: input[i].type,
+      });
     }
+
+    return childs;
   }
 }

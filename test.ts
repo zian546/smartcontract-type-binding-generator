@@ -1,11 +1,10 @@
-import Writer from "./src/implementation/writer";
+import { Writer } from "./src/implementation/writer";
 import * as fs from "fs";
-import Parser from "./src/implementation/class-parser";
+import { TypescriptClassParser } from "./src/implementation/typescript/class-parser";
 import { ABI } from "./src/implementation/type-mapping";
 
 const abi = fs.readFileSync("./abi/auctions/auction.json");
 const writer = new Writer();
-const body = writer.write("", abi.toString());
-const output = new Parser().parse("test", body);
+const output = writer.write("test", abi.toString("utf-8"), { lang: "js" });
 
-fs.writeFileSync("./output.ts", output);
+fs.writeFileSync("./output.js", output);

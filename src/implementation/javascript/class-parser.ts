@@ -16,9 +16,9 @@ import {
   SIGNER_OR_PROVIDER_TOKEN,
   SIGNER_OR_PROVIDER_TYPE_TOKEN,
   OPT_TOKEN,
-} from "./token";
+} from "../token";
 
-export default class Parser {
+export class JavascriptClassParser {
   private defaultAbiParam: string;
   private defaultInstanceName: string;
   private defaultAddressName: string;
@@ -31,8 +31,8 @@ export default class Parser {
     this.defaultSignerOrProviderName = SIGNER_OR_PROVIDER_TOKEN;
   }
   public parse(name: string, body: string) {
-    const importDirective = 'import * as ethers from "ethers"';
-    const classSignature = `export default class ${name} `;
+    const importDirective = 'const ethers = require("ethers");';
+    const classSignature = `class ${name} `;
     const contract = importDirective.concat(
       NEWLINE,
       NEWLINE,
@@ -44,34 +44,33 @@ export default class Parser {
       this.getConstructor(),
       NEWLINE,
       body,
-      CLOSE_BRACE
+      CLOSE_BRACE,
+      NEWLINE,
+      NEWLINE,
+      this.getModuleExports(name)
     );
 
     return contract;
   }
 
   private getConstructor() {
-    const constructorLiteral = `constructor(${this.inputLiteral()})`;
+    const constructorLiteral = `/**
+   * 
+   * @param {string} contractAddress 
+   * @param {any} abi 
+   * @param {ethers.Signer | ethers.providers | undefined} signerOrProvider 
+   */\n${FORMAT_LINE}constructor(${this.inputLiteral()})`;
     return FORMAT_LINE.concat(constructorLiteral, this.getConstructorBody());
   }
   private inputLiteral() {
     return this.defaultAddressName.concat(
-      COLON,
-      SPACE,
-      STRING_TOKEN,
       COMMA,
       SPACE,
       this.defaultAbiParam,
-      COLON,
-      SPACE,
-      ANY_TOKEN,
       COMMA,
       SPACE,
       SIGNER_OR_PROVIDER_TOKEN,
-      OPT_TOKEN,
-      COLON,
-      SPACE,
-      SIGNER_OR_PROVIDER_TYPE_TOKEN
+      " = undefined"
     );
   }
   private getConstructorBody() {
@@ -90,8 +89,7 @@ export default class Parser {
       addressLiteral,
       NEWLINE,
       FORMAT_LINE,
-      CLOSE_BRACE,
-      NEWLINE
+      CLOSE_BRACE
     );
   }
 
@@ -109,22 +107,14 @@ export default class Parser {
   }
 
   private getContractInstanceName() {
-    return PRIVATE_IDENT.concat(
-      SPACE,
-      this.defaultInstanceName,
-      COLON,
-      SPACE,
-      CONTRACT_TOKEN
-    );
+    return this.defaultInstanceName;
   }
 
   private getAddressName() {
-    return PRIVATE_IDENT.concat(
-      SPACE,
-      this.defaultAddressName,
-      COLON,
-      SPACE,
-      STRING_TOKEN
-    );
+    return this.defaultAddressName;
+  }
+
+  private getModuleExports(name: string) {
+    return `module.exports = {${name}}`;
   }
 }
