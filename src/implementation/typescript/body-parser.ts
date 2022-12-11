@@ -12,8 +12,8 @@ import {
   SEMI_COLON,
   SPACE,
   FORMAT_LINE,
-} from "./token";
-import { Tree } from "./type-mapping";
+} from "../token";
+import { Tree } from "../type-mapping";
 
 export class TypescriptBodyParser {
   public static parse(fn: Tree) {

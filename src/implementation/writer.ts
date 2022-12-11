@@ -1,9 +1,9 @@
 import * as fs from "fs-extra";
 import * as path from "path";
 import { ABI } from "./type-mapping";
-import { TypescriptParser } from "./io-parser";
+import { TypescriptParser } from "./typescript/io-parser";
 import { AbiReader } from "./reader";
-import { TypescriptClassParser } from "./class-parser";
+import { TypescriptClassParser } from "./typescript/class-parser";
 import { TreeBuilder } from "./grouper";
 
 export type writerOtions =

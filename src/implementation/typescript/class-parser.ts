@@ -16,7 +16,7 @@ import {
   SIGNER_OR_PROVIDER_TOKEN,
   SIGNER_OR_PROVIDER_TYPE_TOKEN,
   OPT_TOKEN,
-} from "./token";
+} from "../token";
 
 export class TypescriptClassParser {
   private defaultAbiParam: string;
