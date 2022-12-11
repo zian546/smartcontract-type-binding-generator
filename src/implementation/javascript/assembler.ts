@@ -83,7 +83,7 @@ export class JavascriptMethodAssembler {
     return literal;
   }
   private getStartingParam() {
-    return " (";
+    return "(";
   }
 
   public build(Tree: Tree) {
@@ -115,7 +115,7 @@ export class JavascriptMethodAssembler {
       params = params.concat(literal[i].concat(COMMA, SPACE));
     }
 
-    return params.concat(CLOSE_PAR, SPACE);
+    return params.concat(CLOSE_PAR);
   }
 
   private parseInput(value: iochild[]) {
@@ -134,9 +134,8 @@ export class JavascriptMethodAssembler {
     const inputName = this.determineInputName(input).name;
 
     input.inferredTypes = inputType;
-    const inputLiteral = inputName.concat(COLON, SPACE, inputType);
 
-    return inputLiteral;
+    return inputName;
   }
 
   private writeOutput(value: iochild[]) {
@@ -168,12 +167,13 @@ export class JavascriptMethodAssembler {
     this.docGen.generateJsDoc(fnObj);
 
     const signature = FORMAT_LINE.concat(
-      SPACE,
+      fnObj.jsDoc,
+      FORMAT_LINE,
       ASYNC,
       SPACE,
       fnObj.name,
       fnObj.attributes.inputs.literals as string,
-      this.determineOutput(fnObj),
+      // this.determineOutput(fnObj),
       // function implementation will starts here
       SPACE,
       OPEN_BRACE,
