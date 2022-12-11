@@ -38,10 +38,16 @@ import {
 } from "../token";
 import { TreeBuilder } from "../tree-builder";
 import { JavascriptBodyParser } from "./body-parser";
+import { DocGen } from "./js-doc-generator";
 
 const UNNAMED_VAR = "argv";
 const SINGLE_ELEMENT = 1;
 export class JavascriptMethodAssembler {
+  private docGen: DocGen;
+
+  constructor() {
+    this.docGen = new DocGen();
+  }
   private unnamedCounter: number = 0;
 
   private incrementCounter() {
@@ -127,6 +133,7 @@ export class JavascriptMethodAssembler {
     const inputType = this.determineType(input.type);
 
     input.inferredTypes = inputType;
+    input.jsDoc = this.docGen.generateParam(input);
 
     const inputName = this.determineInputName(input).name;
     const inputLiteral = inputName.concat(COLON, SPACE, inputType);
