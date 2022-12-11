@@ -11,10 +11,10 @@ import {
   boolMapping,
   fallbackMapping,
   ABI,
-  Tree,
+  Branch,
   _function,
   arrayExt,
-} from "./type-mapping";
+} from "../type-mapping";
 import {
   COLON,
   SPACE,
@@ -34,8 +34,8 @@ import {
   CLOSE_BRACKET,
   FORMAT_LINE,
   PUBLIC_IDENT,
-} from "./token";
-import { TreeBuilder } from "./grouper";
+} from "../token";
+import { BranchBuilder } from "../grouper";
 import { TypescriptBodyParser } from "./body-parser";
 
 const UNNAMED_VAR = "argv";
@@ -97,8 +97,8 @@ export class TypescriptParser {
     return SPACE.concat(OPEN_PAR);
   }
 
-  public parse(tree: Tree[]) {
-    for (const fn of tree) {
+  public parse(Branch: Branch[]) {
+    for (const fn of Branch) {
       // it is IMPORTANT that we parse signature literal AFTER parsing input and output literals.
       // because we need input and output literals to complete function signature literals.
 
@@ -110,7 +110,7 @@ export class TypescriptParser {
       fn.signatureLiteral = this.parseFnSignature(fn);
     }
 
-    return tree;
+    return Branch;
   }
 
   private writeInput(value: iochild[]) {
@@ -154,7 +154,7 @@ export class TypescriptParser {
     else return PROMISE.concat(OPEN_ANGLE_BRACKET, OPEN_BRACKET);
   }
 
-  private parseFnSignature(fnObj: Tree) {
+  private parseFnSignature(fnObj: Branch) {
     const signature = FORMAT_LINE.concat(
       PUBLIC_IDENT,
       SPACE,
@@ -179,7 +179,7 @@ export class TypescriptParser {
     return signature;
   }
 
-  private determineOutput(fnObj: Tree) {
+  private determineOutput(fnObj: Branch) {
     const _eval = fnObj.attributes.outputs.obj.length;
     const constant = fnObj.constant;
 

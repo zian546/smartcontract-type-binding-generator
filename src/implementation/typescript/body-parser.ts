@@ -13,10 +13,10 @@ import {
   SPACE,
   FORMAT_LINE,
 } from "../token";
-import { Tree } from "../type-mapping";
+import { Branch } from "../type-mapping";
 
 export class TypescriptBodyParser {
-  public static parse(fn: Tree) {
+  public static parse(fn: Branch) {
     const txLiteral = NEWLINE.concat(
       FORMAT_LINE,
       FORMAT_LINE,
@@ -44,7 +44,7 @@ export class TypescriptBodyParser {
     return txLiteral;
   }
 
-  private static parseInput(fn: Tree) {
+  private static parseInput(fn: Branch) {
     let input = OPEN_PAR;
     const lastIndex = fn.attributes.inputs.obj.length;
     for (const i in fn.attributes.inputs.obj) {
