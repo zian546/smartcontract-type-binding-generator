@@ -41,6 +41,7 @@ import BodyParser from "./body-parser";
 const UNNAMED_VAR = "argv";
 const SINGLE_ELEMENT = 1;
 export default class IoParser extends AbiGrouper {
+  private isJs: boolean;
   private unnamedCounter: number = 0;
 
   private incrementCounter() {

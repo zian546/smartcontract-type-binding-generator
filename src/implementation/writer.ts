@@ -4,12 +4,24 @@ import { ABI } from "./type-mapping";
 import IoParser from "./io-parser";
 import AbiReader from "./reader";
 
-export type writerOtions = {
-  /**
-   * specify what bindings to generate (default `typescript`)
-   */
-  lang?: "js" | "ts";
-};
+export type writerOtions =
+  | {
+      /**
+       * specify what bindings to generate (default `typescript`)
+       */
+      lang?: "js" | "ts";
+    }
+  | {
+      /**
+       * specify what bindings to generate (default `typescript`)
+       */
+      lang: "js";
+      /**
+       * generate `{from: address}` bindings for setting `msg.sender` value (useful building bindings for unit test using tools such as `truffle`)
+       */
+      truffle: boolean;
+    };
+
 export class Writer extends IoParser {
   /**
    * @param name the contract name
