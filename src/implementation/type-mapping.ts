@@ -52,10 +52,12 @@ export type Branch = {
   attributes: {
     inputs: {
       obj: iochild[];
+      jsDoc?: string;
       literals?: string;
     };
     outputs: {
       obj: iochild[];
+      jsDoc?: string;
       literals?: string;
     };
   };

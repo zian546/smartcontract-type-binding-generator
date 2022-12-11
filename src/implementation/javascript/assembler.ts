@@ -67,11 +67,9 @@ export class JavascriptMethodAssembler {
     return input;
   }
 
-  // TODO : make return type in Promise<T>
   private buildOutputLiteral(input: iochild) {
     const outputType = this.determineType(input.type);
     input.inferredTypes = outputType;
-    input.jsDoc = this.docGen.generateOutput(input);
 
     return outputType;
   }
@@ -98,6 +96,7 @@ export class JavascriptMethodAssembler {
         fn.attributes.outputs.obj
       );
       fn.bodyLiteral = JavascriptBodyParser.parse(fn);
+      fn.jsDoc = this.docGen.generateJsDoc(fn);
       fn.signatureLiteral = this.parseFnSignature(fn);
     }
 
@@ -136,8 +135,6 @@ export class JavascriptMethodAssembler {
     const inputName = this.determineInputName(input).name;
 
     input.inferredTypes = inputType;
-    input.jsDoc = this.docGen.generateParam(input);
-
     const inputLiteral = inputName.concat(COLON, SPACE, inputType);
 
     return inputLiteral;
@@ -169,8 +166,7 @@ export class JavascriptMethodAssembler {
   }
 
   private parseFnSignature(fnObj: Branch) {
-    console.log(fnObj.attributes.outputs);
-
+    fnObj.jsDoc = this.docGen.generateJsDoc(fnObj);
     const signature = FORMAT_LINE.concat(
       SPACE,
       ASYNC,
