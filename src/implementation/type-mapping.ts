@@ -38,6 +38,8 @@ export type abiChild = {
 export type iochild = {
   name: string;
   type: string;
+  inferredTypes?: string;
+  jsDoc?: string;
 };
 
 // TODO : make body using ethers js
@@ -46,6 +48,7 @@ export type Branch = {
   constant: boolean;
   signatureLiteral?: string;
   bodyLiteral?: string;
+  jsDoc?: string;
   attributes: {
     inputs: {
       obj: iochild[];
