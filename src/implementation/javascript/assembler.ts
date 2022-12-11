@@ -96,7 +96,6 @@ export class JavascriptMethodAssembler {
         fn.attributes.outputs.obj
       );
       fn.bodyLiteral = JavascriptBodyParser.parse(fn);
-      fn.jsDoc = this.docGen.generateJsDoc(fn);
       fn.signatureLiteral = this.parseFnSignature(fn);
     }
 
@@ -166,7 +165,8 @@ export class JavascriptMethodAssembler {
   }
 
   private parseFnSignature(fnObj: Branch) {
-    fnObj.jsDoc = this.docGen.generateJsDoc(fnObj);
+    this.docGen.generateJsDoc(fnObj);
+
     const signature = FORMAT_LINE.concat(
       SPACE,
       ASYNC,

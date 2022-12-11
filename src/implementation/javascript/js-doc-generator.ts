@@ -5,24 +5,43 @@ export class DocGen {
     return `* @param {${fragment.inferredTypes}} ${fragment.name}\n`;
   }
 
+  private generateOutput(fragments: string[]) {
+    return `* @returns {${fragments}}\n`;
+  }
+
   // TODO : make method to concat multiple jsdoc literals into 1 for that tree branch
   public generateJsDoc(branch: Branch) {
-    let JsDocliteral = "";
-
-    for (const nodeChild of branch.attributes.outputs.obj) {
-      JsDocliteral = JsDocliteral.concat(nodeChild.jsDoc);
-    }
-    console.log(JsDocliteral);
-    return JsDocliteral;
+    this.buildInputJsDocs(branch);
+    this.buildOutputJsDoc(branch);
+    this.buildJsDoc(branch);
   }
 
   private buildInputJsDocs(branch: Branch) {
-    branch.attributes.inputs.jsDoc = "";
+    let doc = "";
 
     for (const nodeChild of branch.attributes.inputs.obj) {
-      branch.attributes.inputs.jsDoc = branch.attributes.inputs.jsDoc.concat(
-        nodeChild.jsDoc
-      );
+      nodeChild.jsDoc = this.generateParam(nodeChild);
+
+      doc = doc.concat(nodeChild.jsDoc);
     }
+
+    branch.attributes.inputs.jsDoc = doc;
+  }
+
+  private buildOutputJsDoc(branch: Branch) {
+    let outputs = [];
+
+    branch.attributes.outputs.obj.forEach((val, i) =>
+      outputs.push(val.inferredTypes)
+    );
+
+    branch.attributes.outputs.jsDoc = this.generateOutput(outputs);
+  }
+  /**
+   *
+   * @param branch
+   */
+  private buildJsDoc(branch: Branch) {
+    branch.jsDoc = `/**\n ${branch.attributes.inputs.jsDoc} ${branch.attributes.outputs.jsDoc} */`;
   }
 }
