@@ -40,8 +40,12 @@ import BodyParser from "./body-parser";
 
 const UNNAMED_VAR = "argv";
 const SINGLE_ELEMENT = 1;
-export class IoParser extends AbiGrouper {
-  private isJs: boolean;
+export class TypescriptIoParser {
+  private abiInferer: AbiGrouper;
+
+  constructor() {
+    this.abiInferer = new AbiGrouper();
+  }
   private unnamedCounter: number = 0;
 
   private incrementCounter() {
@@ -98,8 +102,8 @@ export class IoParser extends AbiGrouper {
     return SPACE.concat(OPEN_PAR);
   }
 
-  protected parse(abi: ABI) {
-    const fnGroup = this.group(abi);
+  public parse(abi: ABI) {
+    const fnGroup = this.abiInferer.group(abi);
 
     for (const fn of fnGroup) {
       // it is IMPORTANT that we parse signature literal AFTER parsing input and output literals.

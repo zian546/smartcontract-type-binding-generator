@@ -10,7 +10,7 @@ import {
 } from "./type-mapping";
 
 export default class AbiGrouper {
-  protected group(abi: ABI) {
+  public group(abi: ABI) {
     let fnLiteral: functionLiteral[] = [];
     for (const node of abi) {
       const parsedChild: functionLiteral = this.groupAttributes(node);
