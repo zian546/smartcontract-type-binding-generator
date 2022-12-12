@@ -12,11 +12,13 @@ import {
   SEMI_COLON,
   SPACE,
   FORMAT_LINE,
+  TRUFFLE_FROM_ADDRESS_TOKEN,
+  TRUFFLE_FORM_ADDRESS_ARGUMENT_TOKEN,
 } from "../token";
 import { Branch } from "../type-mapping";
 
 export class JavascriptBodyParser {
-  public static parse(fn: Branch) {
+  public static parse(fn: Branch, truffle: boolean) {
     const txLiteral = NEWLINE.concat(
       FORMAT_LINE,
       FORMAT_LINE,
@@ -30,7 +32,7 @@ export class JavascriptBodyParser {
       SPACE,
       DEFAULT_CONTRACT_CALL,
       fn.name,
-      this.parseInput(fn),
+      this.parseInput(fn, truffle),
       SEMI_COLON,
       NEWLINE,
       FORMAT_LINE,
@@ -44,16 +46,16 @@ export class JavascriptBodyParser {
     return txLiteral;
   }
 
-  private static parseInput(fn: Branch) {
-    let input = OPEN_PAR;
-    const lastIndex = fn.attributes.inputs.obj.length;
-    for (const i in fn.attributes.inputs.obj) {
-      input = input.concat(fn.attributes.inputs.obj[i].name);
-      if (parseInt(i) !== lastIndex - 1) {
-        input = input.concat(COMMA);
-      }
+  private static parseInput(fn: Branch, truffle: boolean) {
+    let literals = fn.attributes.inputs.literals;
+
+    if (truffle) {
+      literals = literals.replace(
+        TRUFFLE_FROM_ADDRESS_TOKEN,
+        TRUFFLE_FORM_ADDRESS_ARGUMENT_TOKEN
+      );
     }
-    input = input.concat(CLOSE_PAR);
-    return input;
+
+    return literals;
   }
 }
