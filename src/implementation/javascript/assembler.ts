@@ -36,6 +36,7 @@ import {
   CLOSE_BRACKET,
   FORMAT_LINE,
   PUBLIC_IDENT,
+  TRUFFLE_FROM_ADDRESS_TOKEN,
 } from "../token";
 import { TreeBuilder } from "../tree-builder";
 import { JavascriptBodyParser } from "./body-parser";
@@ -86,7 +87,7 @@ export class JavascriptMethodAssembler {
     return "(";
   }
 
-  public build(Tree: Tree) {
+  public build(Tree: Tree, truffle: boolean) {
     for (const fn of Tree) {
       // it is IMPORTANT that we parse signature literal AFTER parsing input and output literals.
       // because we need input and output literals to complete function signature literals.
@@ -103,10 +104,16 @@ export class JavascriptMethodAssembler {
   }
 
   private writeInput(value: iochild[]) {
-    if (value.length === 0) return "()";
+    if (value.length === 0) {
+      return "()";
+    }
+
     const lastIndex = value.length - 1;
+
     let params = this.getStartingParam();
+
     let literal = this.parseInput(value);
+
     for (const i in value) {
       if (i == lastIndex.toString()) {
         params = params.concat(literal[i]);
@@ -115,7 +122,7 @@ export class JavascriptMethodAssembler {
       params = params.concat(literal[i].concat(COMMA, SPACE));
     }
 
-    return params.concat(CLOSE_PAR);
+    return params.concat(COMMA, SPACE, TRUFFLE_FROM_ADDRESS_TOKEN, CLOSE_PAR);
   }
 
   private parseInput(value: iochild[]) {
