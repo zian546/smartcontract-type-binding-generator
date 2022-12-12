@@ -36,3 +36,5 @@ export const OPT_TOKEN = "?";
 export const SIGNER_OR_PROVIDER_TOKEN = "signerOrProvider";
 export const SIGNER_OR_PROVIDER_TYPE_TOKEN =
   "ethers.ethers.Signer | ethers.ethers.providers.Provider";
+export const TRUFFLE_FROM_ADDRESS_TOKEN = "fromAddress";
+export const TRUFFLE_FORM_ADDRESS_ARGUMENT_TOKEN = `{ from: ${TRUFFLE_FROM_ADDRESS_TOKEN} }`;
