@@ -203,19 +203,4 @@ export class JavascriptMethodAssembler {
 
     return signature;
   }
-
-  private determineOutput(fnObj: Branch) {
-    const _eval = fnObj.attributes.outputs.obj.length;
-    const constant = fnObj.constant;
-
-    if (_eval === 0 || _eval === undefined || _eval === null || !constant)
-      return COLON.concat(
-        SPACE,
-        PROMISE,
-        OPEN_ANGLE_BRACKET,
-        fallbackMapping,
-        CLOSE_ANGLE_BRACKET
-      );
-    else return COLON.concat(SPACE, fnObj.attributes.outputs.literals as any);
-  }
 }
