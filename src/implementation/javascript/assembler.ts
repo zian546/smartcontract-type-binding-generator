@@ -92,7 +92,10 @@ export class JavascriptMethodAssembler {
       // it is IMPORTANT that we parse signature literal AFTER parsing input and output literals.
       // because we need input and output literals to complete function signature literals.
 
-      fn.attributes.inputs.literals = this.writeInput(fn.attributes.inputs.obj);
+      fn.attributes.inputs.literals = this.writeInput(
+        fn.attributes.inputs.obj,
+        truffle
+      );
       fn.attributes.outputs.literals = this.writeOutput(
         fn.attributes.outputs.obj
       );
@@ -103,9 +106,13 @@ export class JavascriptMethodAssembler {
     return Tree;
   }
 
-  private writeInput(value: iochild[]) {
-    if (value.length === 0) {
+  private writeInput(value: iochild[], truffle: boolean) {
+    if (value.length === 0 && !truffle) {
       return "()";
+    }
+
+    if (value.length === 0 && truffle) {
+      return `(${TRUFFLE_FROM_ADDRESS_TOKEN})`;
     }
 
     const lastIndex = value.length - 1;
@@ -122,7 +129,9 @@ export class JavascriptMethodAssembler {
       params = params.concat(literal[i].concat(COMMA, SPACE));
     }
 
-    return params.concat(COMMA, SPACE, TRUFFLE_FROM_ADDRESS_TOKEN, CLOSE_PAR);
+    if (truffle)
+      return params.concat(COMMA, SPACE, TRUFFLE_FROM_ADDRESS_TOKEN, CLOSE_PAR);
+    else return params.concat(CLOSE_PAR);
   }
 
   private parseInput(value: iochild[]) {
