@@ -16,6 +16,7 @@ import {
   SIGNER_OR_PROVIDER_TOKEN,
   SIGNER_OR_PROVIDER_TYPE_TOKEN,
   OPT_TOKEN,
+  PUBLIC_IDENT,
 } from "../token";
 
 export class TypescriptClassParser {
@@ -119,7 +120,7 @@ export class TypescriptClassParser {
   }
 
   private getAddressName() {
-    return PRIVATE_IDENT.concat(
+    return PUBLIC_IDENT.concat(
       SPACE,
       this.defaultAddressName,
       COLON,
