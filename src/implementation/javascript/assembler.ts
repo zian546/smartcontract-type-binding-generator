@@ -99,7 +99,7 @@ export class JavascriptMethodAssembler {
       fn.attributes.outputs.literals = this.writeOutput(
         fn.attributes.outputs.obj
       );
-      fn.bodyLiteral = JavascriptBodyParser.parse(fn);
+      fn.bodyLiteral = JavascriptBodyParser.parse(fn, truffle);
       fn.signatureLiteral = this.parseFnSignature(fn);
     }
 
