@@ -65,7 +65,7 @@ export class Writer {
 
     if (opt.lang === "js") {
       const generateTruffleBinds = opt.truffle ?? false;
-      bindings = this.buildJavascriptBinding(name, tree);
+      bindings = this.buildJavascriptBinding(name, tree, generateTruffleBinds);
     }
 
     return bindings;
@@ -97,8 +97,12 @@ export class Writer {
     return bindings;
   }
 
-  private buildJavascriptBinding(name: string, tree: Tree) {
-    tree = this.javaScriptAssembler.build(tree);
+  private buildJavascriptBinding(
+    name: string,
+    tree: Tree,
+    genTruffle: boolean
+  ) {
+    tree = this.javaScriptAssembler.build(tree, genTruffle);
     const body = this.buildBody(tree);
 
     const bindings = this.javaScriptClassParser.parse(name, body);
