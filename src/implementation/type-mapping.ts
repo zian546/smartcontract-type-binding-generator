@@ -5,6 +5,7 @@ export const _function = "function";
 export const int = "int";
 export const uint = "uint";
 export const intMapping = "number";
+export const returnsIntMapping = "ethers.BigNumber";
 
 export const address = "address";
 export const addressMapping = "string";

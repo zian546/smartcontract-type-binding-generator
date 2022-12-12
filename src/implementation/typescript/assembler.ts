@@ -1,3 +1,4 @@
+import { TypeInferer } from "./../type-inferer";
 import {
   iochild,
   int,
@@ -55,7 +56,7 @@ export class TypescriptMethodAssembler {
     return UNNAMED_VAR.concat(this.unnamedCounter.toString());
   }
   private buildInputLiteral(input: iochild): string {
-    const inputType = this.determineType(input.type);
+    const inputType = TypeInferer.infer(input.type, false);
     const inputName = this.determineInputName(input).name;
     const inputLiteral = inputName.concat(COLON, SPACE, inputType);
 
@@ -81,7 +82,7 @@ export class TypescriptMethodAssembler {
 
   // TODO : make return type in Promise<T>
   private buildOutputLiteral(input: iochild) {
-    const outputType = this.determineType(input.type);
+    const outputType = TypeInferer.infer(input.type, true);
 
     return outputType;
   }
@@ -191,19 +192,5 @@ export class TypescriptMethodAssembler {
         CLOSE_ANGLE_BRACKET
       );
     else return COLON.concat(SPACE, fnObj.attributes.outputs.literals as any);
-  }
-
-  private determineType(value: string): string {
-    return value.includes(arrayExt)
-      ? this.inferTypes(value).concat(arrayExt)
-      : this.inferTypes(value);
-  }
-
-  private inferTypes(value: string) {
-    if (value.includes(int) || value.includes(uint)) return intMapping;
-    else if (value === address) return addressMapping;
-    else if (value === string) return stringMapping;
-    else if (value === bool) return boolMapping;
-    else return fallbackMapping;
   }
 }
