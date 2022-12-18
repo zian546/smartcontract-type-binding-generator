@@ -1,7 +1,7 @@
 {
   "name": "smartcontract-type-binding-generator",
-  "version": "1.0.4",
-  "description": "",
+  "version": "1.0.5",
+  "description": "Bindings generator for ethereum smart contract",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
