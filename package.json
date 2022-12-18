@@ -1,12 +1,16 @@
 {
   "name": "smartcontract-type-binding-generator",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "/dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zianksm/smartcontract-type-binding-generator.git"
+  },
   "scripts": {
     "build": "npx tsc",
     "go": "npm run build && npm publish"

@@ -7,7 +7,7 @@ const abi = fs.readFileSync("./abi/auctions/auction.json");
 const writer = new Writer();
 const output = writer.write("test", abi.toString("utf-8"), {
   lang: "js",
-  truffle: false,
+  truffle: true,
 });
 
 fs.writeFileSync("./output.js", output);
