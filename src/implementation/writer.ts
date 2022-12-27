@@ -105,7 +105,7 @@ export class Writer {
     tree = this.javaScriptAssembler.build(tree, genTruffle);
     const body = this.buildBody(tree);
 
-    const bindings = this.javaScriptClassParser.parse(name, body);
+    const bindings = this.javaScriptClassParser.parse(name, body, genTruffle);
     return bindings;
   }
 }

@@ -30,8 +30,10 @@ export class JavascriptClassParser {
     this.defaultAbiParam = DEFAULT_ABI_PARAM;
     this.defaultSignerOrProviderName = SIGNER_OR_PROVIDER_TOKEN;
   }
-  public parse(name: string, body: string) {
-    const importDirective = 'const ethers = require("ethers");';
+  public parse(name: string, body: string, isTruffle: boolean) {
+    const importDirective = isTruffle
+      ? ""
+      : 'const ethers = require("ethers");';
     const classSignature = `class ${name} `;
     const contract = importDirective.concat(
       NEWLINE,
@@ -41,7 +43,7 @@ export class JavascriptClassParser {
       NEWLINE,
       this.getMemberClass(),
       NEWLINE,
-      this.getConstructor(),
+      this.getConstructor(isTruffle),
       NEWLINE,
       body,
       CLOSE_BRACE,
@@ -53,28 +55,43 @@ export class JavascriptClassParser {
     return contract;
   }
 
-  private getConstructor() {
-    const constructorLiteral = `/**
+  private getConstructor(isTruffle: boolean) {
+    const constructorLiteral = isTruffle
+      ? `/**
+   * 
+   * @param {string} contractAddress 
+   * @param {any} ${this.defaultInstanceName} 
+   */\n${FORMAT_LINE}constructor(${this.inputLiteral(isTruffle)})`
+      : `/**
    * 
    * @param {string} contractAddress 
    * @param {any} abi 
    * @param {ethers.Signer | ethers.providers | undefined} signerOrProvider 
-   */\n${FORMAT_LINE}constructor(${this.inputLiteral()})`;
-    return FORMAT_LINE.concat(constructorLiteral, this.getConstructorBody());
-  }
-  private inputLiteral() {
-    return this.defaultAddressName.concat(
-      COMMA,
-      SPACE,
-      this.defaultAbiParam,
-      COMMA,
-      SPACE,
-      SIGNER_OR_PROVIDER_TOKEN,
-      " = undefined"
+   */\n${FORMAT_LINE}constructor(${this.inputLiteral(isTruffle)})`;
+    return FORMAT_LINE.concat(
+      constructorLiteral,
+      this.getConstructorBody(isTruffle)
     );
   }
-  private getConstructorBody() {
-    const instanceLiteral = `this.${this.defaultInstanceName} = new ethers.Contract(${this.defaultAddressName}, ${this.defaultAbiParam}, ${this.defaultSignerOrProviderName});`;
+  private inputLiteral(isTruffle: boolean) {
+    const literal = isTruffle
+      ? this.defaultAddressName.concat(COMMA, SPACE, this.defaultInstanceName)
+      : this.defaultAddressName.concat(
+          COMMA,
+          SPACE,
+          this.defaultAbiParam,
+          COMMA,
+          SPACE,
+          SIGNER_OR_PROVIDER_TOKEN,
+          " = undefined"
+        );
+
+    return literal;
+  }
+  private getConstructorBody(isTruffle: boolean) {
+    const instanceLiteral = isTruffle
+      ? `this.${this.defaultInstanceName} = ${this.defaultInstanceName}`
+      : `this.${this.defaultInstanceName} = new ethers.Contract(${this.defaultAddressName}, ${this.defaultAbiParam}, ${this.defaultSignerOrProviderName});`;
     const addressLiteral = `this.${this.defaultAddressName} = ${this.defaultAddressName};`;
 
     return SPACE.concat(
